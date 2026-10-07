@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vorkoo Dashboard</title>
+  <!-- Unified Application Stylesheet -->
+  <link rel="stylesheet" href="home.css">
+  <script>
+    // Prevent Flash of Unstyled Content (FOUC)
+    (function() {
+      const savedTheme = localStorage.getItem('vorkoo-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- Sidebar Navigation -->
+  <aside class="app-sidebar" id="appSidebar">
+    <a href="#dashboard" class="sidebar-brand">
+      Vor<span>koo</span>
+    </a>
+
+    <nav class="sidebar-nav" aria-label="Main Application Navigation">
+      <a href="#dashboard" class="nav-item active" data-route="dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" /></svg>
+        Dashboard
+      </a>
+      <a href="#work" class="nav-item" data-route="work">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" /></svg>
+        Work
+      </a>
+      <a href="#clients" class="nav-item" data-route="clients">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
+        Clients
+      </a>
+      <a href="#payments" class="nav-item" data-route="payments">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" /></svg>
+        Payments
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../Landing-page/landing.html" class="nav-item" id="logout-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" /></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="app-main-wrapper">
+    
+    <!-- Logged-in App Navbar / Header -->
+    <header class="app-header app-mobile-header" id="appHeader">
+      <div class="header-left">
+        <a href="#dashboard" class="sidebar-brand header-mobile-brand" aria-label="Vorkoo Home">
+          Vor<span>koo</span>
+        </a>
+        <div class="demo-badge-indicator" id="demoBadgeIndicator" title="Interactive demo prototype with sample data">
+          <span class="demo-badge-dot"></span>
+          <span class="demo-badge-text">Demo Workspace</span>
+        </div>
+      </div>
+      <div class="header-right mobile-header-right">
+        <button type="button" class="feedback-header-btn" id="headerFeedbackBtn" title="Give feedback on Vorkoo">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>Give Feedback</span>
+        </button>
+
+        <button class="theme-toggle-btn" id="mobileThemeToggle" aria-label="Toggle Theme">
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+
+        <!-- Compact User Profile Component -->
+        <div class="user-profile-menu" id="userProfileMenu">
+          <button type="button" class="user-profile-btn" id="userProfileBtn" aria-expanded="false" aria-haspopup="true" aria-label="User profile menu">
+            <div class="user-avatar" id="header-user-avatar">U</div>
+            <div class="user-profile-info">
+              <span class="user-profile-name" id="header-user-name">User</span>
+              <span class="user-profile-email" id="header-user-email"></span>
+            </div>
+            <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- Dropdown with Profile Information and Settings (No Logout) -->
+          <div class="user-profile-dropdown" id="userProfileDropdown" role="menu" aria-hidden="true">
+            <div class="dropdown-profile-header">
+              <div class="dropdown-avatar" id="dropdown-user-avatar">U</div>
+              <div class="dropdown-user-details">
+                <div class="dropdown-name" id="dropdown-user-name">User</div>
+                <div class="dropdown-email" id="dropdown-user-email"></div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-menu-list">
+              <a href="#settings" class="dropdown-menu-item" id="dropdown-settings-link" role="menuitem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Settings</span>
+              </a>
+              <button type="button" class="dropdown-menu-item" id="dropdownFeedbackBtn" role="menuitem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>Give Feedback</span>
+              </button>
+              <button type="button" class="dropdown-menu-item dropdown-reset-btn" id="dropdownResetDemoBtn" role="menuitem">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                <span>Reset Demo</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle Menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Page Area -->
+    <main class="app-content">
+      <div class="app-content-inner">
+        
+        <!-- VIEW: DASHBOARD -->
+        <div id="page-dashboard" class="page-view active">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Here is a summary of your workspace.</p>
+
+          <!-- 7 KPI Metrics Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Total Work</span>
+              <span class="stat-value" id="dash-total-work">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Total Work Value</span>
+              <span class="stat-value" id="dash-total-work-value">₹0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">In Progress</span>
+              <span class="stat-value" id="dash-in-progress" style="color: var(--status-progress)">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Pending</span>
+              <span class="stat-value" id="dash-pending" style="color: var(--status-pending)">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Completed</span>
+              <span class="stat-value" id="dash-completed" style="color: var(--status-completed)">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Received</span>
+              <span class="stat-value" id="dash-received" style="color: var(--status-completed)">₹0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">To Receive</span>
+              <span class="stat-value" id="dash-to-receive" style="color: var(--accent-cyan)">₹0</span>
+            </div>
+            <!-- Mobile Payment Progress Bar inside Top Card -->
+            <div class="dash-payment-progress-wrap" id="dash-payment-progress-wrap">
+              <div class="dash-payment-progress-bar">
+                <div class="dash-payment-progress-fill" id="dash-payment-progress-fill" style="width: 0%;"></div>
+              </div>
+              <div class="dash-payment-progress-labels">
+                <span class="progress-label-received">RECEIVED</span>
+                <span class="progress-label-to-receive">TO RECEIVE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Works Section -->
+          <section class="recent-works-section" id="dash-recent-works-section" aria-labelledby="recent-works-title">
+            <div class="recent-works-header">
+              <div class="recent-works-header-text">
+                <h2 class="recent-works-title" id="recent-works-title">Recent Works</h2>
+                <p class="recent-works-subtitle">Recently created and updated work items</p>
+              </div>
+              <a href="#work" class="recent-view-all-link">
+                <span>View all work</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            </div>
+
+            <!-- Recent Works List (Max 5 or Empty State) -->
+            <div class="recent-works-list" id="dash-recent-works-list">
+              <!-- Rendered via JS -->
+            </div>
+          </section>
+
+          <!-- Backward-compatible hidden container for legacy empty-state selector -->
+          <div class="empty-state" id="dash-empty-state" style="display: none;"></div>
+        </div>
+
+        <!-- VIEW: WORK -->
+        <div id="page-work" class="page-view">
+          <div class="work-container">
+            <div class="work-header">
+              <div class="work-header-text">
+                <h1 class="page-title">Work</h1>
+                <p class="page-subtitle">Manage every project, deadline, priority, and payment in one place.</p>
+              </div>
+              <button type="button" class="btn btn-primary" id="open-add-work-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Work
+              </button>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="work-controls">
+              <div class="work-search-wrapper">
+                <input 
+                  type="text" 
+                  id="work-search-input" 
+                  class="work-input work-search-input" 
+                  placeholder="Search work title or client..." 
+                />
+              </div>
+
+              <div class="work-filters-group">
+                <select id="work-status-filter" class="work-select">
+                  <option value="All">All Statuses</option>
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+
+                <select id="work-priority-filter" class="work-select">
+                  <option value="All">All Priorities</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+
+                <label for="work-sort-filter" class="visually-hidden">Sort by</label>
+                <select id="work-sort-filter" class="work-select" aria-label="Sort by">
+                  <option value="newest" selected>Newest Added</option>
+                  <option value="oldest">Oldest Added</option>
+                  <option value="deadline-nearest">Deadline — Nearest</option>
+                  <option value="deadline-furthest">Deadline — Furthest</option>
+                  <option value="priority-desc">Priority — High to Low</option>
+                  <option value="priority-asc">Priority — Low to High</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Work Items List Container -->
+            <div id="work-cards-list" class="work-cards-list"></div>
+          </div>
+        </div>
+
+        <!-- VIEW: CLIENTS -->
+        <div id="page-clients" class="page-view">
+          <div class="work-header">
+            <div class="work-header-text">
+              <h1 class="page-title">Clients</h1>
+              <p class="page-subtitle">Automatically derived from all active work items and projects.</p>
+            </div>
+          </div>
+          <div id="clients-list-container"></div>
+        </div>
+
+        <!-- VIEW: PAYMENTS -->
+        <div id="page-payments" class="page-view">
+          <div class="work-header">
+            <div class="work-header-text">
+              <h1 class="page-title">Payments</h1>
+              <p class="page-subtitle">Track what you've received and what is still due across all work.</p>
+            </div>
+            <button type="button" class="btn btn-primary" id="open-add-payment-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Record Payment
+            </button>
+          </div>
+          <div id="payments-list-container"></div>
+        </div>
+
+        <!-- VIEW: SETTINGS -->
+        <div id="page-settings" class="page-view">
+          <h1 class="page-title">Settings</h1>
+          <p class="page-subtitle">Manage your preferences and profile.</p>
+
+          <div class="settings-section">
+            <h3 class="settings-header">Account</h3>
+            <div class="settings-row">
+              <div class="settings-info">
+                <h4>Profile Information</h4>
+                <p>Name: <strong id="settings-user-name">Jane Doe</strong></p>
+                <p>Email: <strong id="settings-user-email">jane@example.com</strong></p>
+              </div>
+              <div>
+                <button class="btn btn-secondary" disabled>Edit Profile (Locked)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo Workspace Settings Card -->
+          <div class="settings-section demo-settings-card" id="settings-demo-section">
+            <h3 class="settings-header">Demo Workspace</h3>
+            <div class="settings-row">
+              <div class="settings-info">
+                <h4>Sample Data &amp; Reset</h4>
+                <p>You are exploring the Vorkoo interactive prototype with realistic demo data. Any changes you make are saved locally to your browser. You can reset to the original sample dataset at any time.</p>
+              </div>
+              <div class="settings-demo-actions">
+                <button type="button" class="btn btn-secondary" id="settingsFeedbackBtn">Give Feedback</button>
+                <button type="button" class="btn btn-danger" id="settingsResetDemoBtn">Reset Demo Data</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: LOGOUT MOCK -->
+        <div id="page-logout" class="page-view">
+          <div class="empty-state" style="margin-top: 4rem;">
+            <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <h2 class="empty-title">Logged Out</h2>
+            <p class="empty-desc">You have safely logged out of Vorkoo. (Mock Interface)</p>
+            <a href="#dashboard" class="btn btn-primary">Return to Dashboard</a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Work Modal -->
+  <div id="add-work-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-work-title">
+      <div class="work-modal-header">
+        <h2 id="modal-work-title" class="work-modal-heading">Add New Work</h2>
+        <button type="button" class="work-modal-close-btn" id="close-add-work-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="add-work-form" class="work-modal-form" novalidate>
+        <div class="work-form-grid">
+          <div class="work-form-group full-width">
+            <label for="work-form-title" class="work-label">Work Title <span class="required">*</span></label>
+            <input type="text" id="work-form-title" class="work-input" placeholder="e.g. Website Redesign" required />
+            <span class="work-error-msg" id="error-title"></span>
+          </div>
+
+          <div class="work-form-group">
+            <label for="work-form-client" class="work-label">Client Name</label>
+            <input type="text" id="work-form-client" class="work-input" placeholder="e.g. Apex Studio" />
+          </div>
+
+          <div class="work-form-group">
+            <label for="work-form-deadline" class="work-label">Deadline</label>
+            <input type="date" id="work-form-deadline" class="work-input" />
+          </div>
+
+          <div class="work-form-group full-width">
+            <label for="work-form-desc" class="work-label">Description</label>
+            <textarea id="work-form-desc" class="work-textarea" rows="2" placeholder="Short description of deliverables..."></textarea>
+          </div>
+
+          <div class="work-form-group">
+            <label for="work-form-priority" class="work-label">Priority</label>
+            <select id="work-form-priority" class="work-select">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div class="work-form-group">
+            <label for="work-form-status" class="work-label">Status</label>
+            <select id="work-form-status" class="work-select">
+              <option value="Pending" selected>Pending</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <!-- Project File Attachment (Optional) -->
+          <div class="work-form-group full-width" id="work-form-attachment-wrap">
+            <label class="work-label">Project File (Optional)</label>
+            <input type="file" id="work-form-file-input" style="display: none;" aria-label="Attach project file" />
+            
+            <div id="work-file-empty-state" class="work-attachment-empty-box">
+              <button type="button" class="btn btn-secondary work-attach-btn" id="work-form-attach-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                <span>Attach File</span>
+              </button>
+              <span class="work-attachment-hint">Max size: 25 MB</span>
+            </div>
+
+            <div id="work-file-selected-state" class="work-attachment-selected-box" style="display: none;">
+              <div class="work-attachment-info">
+                <svg class="work-attachment-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                <span id="work-file-name" class="work-attachment-filename" title=""></span>
+                <span id="work-file-size" class="work-attachment-filesize"></span>
+              </div>
+              <div class="work-attachment-actions">
+                <button type="button" class="btn btn-secondary work-attachment-btn-action" id="work-file-replace-btn" title="Replace file">Replace</button>
+                <button type="button" class="btn btn-secondary work-attachment-btn-action text-danger" id="work-file-remove-btn" title="Remove file">Remove</button>
+              </div>
+            </div>
+
+            <span class="work-error-msg" id="error-attachment"></span>
+          </div>
+
+          <div class="work-form-divider full-width"></div>
+
+          <div class="work-form-group">
+            <label for="work-form-total" class="work-label">Total Amount (₹) <span class="required">*</span></label>
+            <div class="work-currency-input-wrap">
+              <span class="work-currency-prefix">₹</span>
+              <input type="number" id="work-form-total" class="work-input with-prefix" placeholder="0" min="0" step="any" required />
+            </div>
+            <span class="work-error-msg" id="error-total"></span>
+          </div>
+
+          <!-- Edit Work: Read-only Received Amount -->
+          <div class="work-form-group" id="work-edit-payment-section" style="display: none;">
+            <div class="work-received-header-wrap">
+              <span class="work-label" style="margin-bottom: 0;">Received Amount (₹)</span>
+              <span class="work-received-subtext">Derived from payments</span>
+            </div>
+            <div class="work-received-display-box" id="work-received-box">
+              <div class="work-received-val-wrap">
+                <span class="work-received-val" id="work-form-received-val">₹0</span>
+              </div>
+              <button type="button" class="btn btn-secondary work-add-payment-action-btn" id="work-form-add-payment-btn" style="display: none;" title="Record a payment for this work">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Add Payment</span>
+              </button>
+            </div>
+            <span class="work-error-msg" id="error-received"></span>
+          </div>
+
+          <!-- New Work: Editable Initial Payment -->
+          <div class="work-form-group" id="work-new-payment-section">
+            <label for="work-form-initial-payment" class="work-label">Initial Payment (₹) <span class="work-label-optional">(Optional)</span></label>
+            <div class="work-currency-input-wrap">
+              <span class="work-currency-prefix">₹</span>
+              <input type="number" id="work-form-initial-payment" class="work-input with-prefix" placeholder="0" min="0" step="any" />
+            </div>
+            <span class="work-error-msg" id="error-initial-payment"></span>
+          </div>
+
+          <!-- New Work: Initial Payment Date & Note (Visible when Initial Payment > 0) -->
+          <div class="work-form-group full-width" id="work-initial-payment-details" style="display: none;">
+            <div class="work-initial-payment-grid">
+              <div class="work-form-group">
+                <label for="work-form-initial-date" class="work-label">Payment Date <span class="required">*</span></label>
+                <input type="date" id="work-form-initial-date" class="work-input" />
+                <span class="work-error-msg" id="error-initial-date"></span>
+              </div>
+              <div class="work-form-group">
+                <label for="work-form-initial-note" class="work-label">Payment Note <span class="work-label-optional">(Optional)</span></label>
+                <input type="text" id="work-form-initial-note" class="work-input" placeholder="e.g. Advance payment" />
+                <span class="work-error-msg" id="error-initial-note"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="work-form-group full-width">
+            <div class="work-calc-banner">
+              <span class="work-calc-label">Calculated Remaining Balance:</span>
+              <span class="work-calc-val" id="work-form-remaining-val">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="work-modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-add-work-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-work-btn">Add Work</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Shared Confirmation Modal -->
+  <div id="vorkoo-confirm-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" style="max-width: 440px;">
+      <div class="work-modal-header">
+        <h2 id="confirm-modal-title" class="work-modal-heading" style="font-size: 1.1rem;">Confirmation</h2>
+      </div>
+      <div style="padding: 20px 24px;">
+        <p id="confirm-modal-msg" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5;"></p>
+      </div>
+      <div class="work-modal-footer" style="margin-top: 0; padding: 16px 24px;">
+        <button type="button" class="btn btn-secondary" id="confirm-modal-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-modal-ok-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deadline Conflict Modal -->
+  <div id="deadline-conflict-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog deadline-conflict-dialog" role="dialog" aria-modal="true" aria-labelledby="conflict-modal-heading">
+      <div class="work-modal-header">
+        <h2 id="conflict-modal-heading" class="work-modal-heading">Deadline Conflict</h2>
+        <button type="button" class="work-modal-close-btn" id="close-conflict-modal-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="conflict-modal-body" id="conflict-modal-body">
+        <!-- Dynamically rendered conflict details and work items -->
+      </div>
+      <div class="work-modal-footer">
+        <button type="button" class="btn btn-secondary" id="footer-close-conflict-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Payment Modal -->
+  <div id="add-payment-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-payment-title" style="max-width: 520px;">
+      <div class="work-modal-header">
+        <h2 id="modal-payment-title" class="work-modal-heading">Record Payment</h2>
+        <button type="button" class="work-modal-close-btn" id="close-add-payment-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="add-payment-form" class="work-modal-form" novalidate>
+        <div class="work-form-grid" style="grid-template-columns: 1fr;">
+          <div class="work-form-group">
+            <label for="payment-form-work" class="work-label">Work Item <span class="required">*</span></label>
+            <select id="payment-form-work" class="work-select" required>
+              <option value="">-- Choose a work item --</option>
+            </select>
+            <span class="work-error-msg" id="error-payment-work"></span>
+          </div>
+
+          <div class="work-form-group" id="payment-remaining-banner-wrap" style="display: none;">
+            <div class="work-calc-banner">
+              <span class="work-calc-label">Current Remaining Balance:</span>
+              <span class="work-calc-val" id="payment-remaining-display">₹0</span>
+            </div>
+          </div>
+
+          <div class="work-form-group">
+            <label for="payment-form-amount" class="work-label">Payment Amount (₹) <span class="required">*</span></label>
+            <div class="work-currency-input-wrap">
+              <span class="work-currency-prefix">₹</span>
+              <input type="number" id="payment-form-amount" class="work-input with-prefix" placeholder="0" min="0.01" step="any" required />
+            </div>
+            <span class="work-error-msg" id="error-payment-amount"></span>
+          </div>
+
+          <div class="work-form-group">
+            <label for="payment-form-date" class="work-label">Payment Date <span class="required">*</span></label>
+            <input type="date" id="payment-form-date" class="work-input" required />
+            <span class="work-error-msg" id="error-payment-date"></span>
+          </div>
+
+          <div class="work-form-group">
+            <label for="payment-form-note" class="work-label">Note (Optional)</label>
+            <input type="text" id="payment-form-note" class="work-input" placeholder="e.g. Milestone 1 / Advance payment" />
+          </div>
+        </div>
+
+        <div class="work-modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-add-payment-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-payment-btn">Add Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment History Modal -->
+  <div id="payment-history-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-history-title" style="max-width: 640px; max-height: 88vh; display: flex; flex-direction: column;">
+      <div class="work-modal-header">
+        <h2 id="modal-history-title" class="work-modal-heading">Payment History</h2>
+        <button type="button" class="work-modal-close-btn" id="close-payment-history-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="conflict-modal-body" id="payment-history-body" style="padding: 20px 24px; overflow-y: auto;">
+        <!-- Dynamic content: work meta, financial summary, and sorted payment list -->
+      </div>
+
+      <div class="work-modal-footer" style="margin-top: 0; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" class="btn btn-primary" id="footer-generate-invoice-btn" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Generate Invoice</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="footer-close-history-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Invoice Modal -->
+  <div id="invoice-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog invoice-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-invoice-title" style="max-width: 760px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="work-modal-header no-print">
+        <h2 id="modal-invoice-title" class="work-modal-heading">Payment Invoice</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn btn-primary no-print" id="header-print-invoice-btn" title="Print or Save as PDF" style="padding: 6px 14px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Print / Save as PDF</span>
+          </button>
+          <button type="button" class="work-modal-close-btn no-print" id="close-invoice-modal-btn" aria-label="Close modal">&times;</button>
+        </div>
+      </div>
+
+      <div class="invoice-modal-body" id="invoice-modal-body" style="padding: 24px; overflow-y: auto;">
+        <!-- Dynamic invoice sheet content -->
+      </div>
+
+      <div class="work-modal-footer no-print" style="margin-top: 0; padding: 14px 24px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-secondary no-print" id="footer-close-invoice-btn">Close</button>
+        <button type="button" class="btn btn-primary no-print" id="footer-print-invoice-btn" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          <span>Print / Save as PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Payment Modal -->
+  <div id="edit-payment-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-edit-payment-title" style="max-width: 520px;">
+      <div class="work-modal-header">
+        <h2 id="modal-edit-payment-title" class="work-modal-heading">Edit Payment</h2>
+        <button type="button" class="work-modal-close-btn" id="close-edit-payment-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="edit-payment-form" class="work-modal-form" novalidate>
+        <div class="work-form-grid" style="grid-template-columns: 1fr;">
+          <div class="work-form-group">
+            <label class="work-label">Work Item &amp; Client</label>
+            <div class="edit-payment-context-box">
+              <span class="edit-payment-context-title" id="edit-payment-context-title"></span>
+              <span class="edit-payment-context-client" id="edit-payment-context-client"></span>
+            </div>
+          </div>
+
+          <div class="work-form-group" id="edit-payment-banner-wrap">
+            <div class="work-calc-banner">
+              <span class="work-calc-label">Maximum Allowed for this Payment:</span>
+              <span class="work-calc-val" id="edit-payment-max-display">₹0</span>
+            </div>
+          </div>
+
+          <div class="work-form-group">
+            <label for="edit-payment-form-amount" class="work-label">Payment Amount (₹) <span class="required">*</span></label>
+            <div class="work-currency-input-wrap">
+              <span class="work-currency-prefix">₹</span>
+              <input type="number" id="edit-payment-form-amount" class="work-input with-prefix" placeholder="0" min="0.01" step="any" required />
+            </div>
+            <span class="work-error-msg" id="error-edit-payment-amount"></span>
+          </div>
+
+          <div class="work-form-group">
+            <label for="edit-payment-form-date" class="work-label">Payment Date <span class="required">*</span></label>
+            <input type="date" id="edit-payment-form-date" class="work-input" required />
+            <span class="work-error-msg" id="error-edit-payment-date"></span>
+          </div>
+
+          <div class="work-form-group">
+            <label for="edit-payment-form-note" class="work-label">Note (Optional)</label>
+            <input type="text" id="edit-payment-form-note" class="work-input" placeholder="e.g. Milestone 1 / Advance payment" />
+          </div>
+        </div>
+
+        <div class="work-modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-edit-payment-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submit-edit-payment-btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="work-modal-backdrop" aria-hidden="true">
+    <div class="work-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-feedback-title" style="max-width: 480px;">
+      <div class="work-modal-header">
+        <h2 id="modal-feedback-title" class="work-modal-heading" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Share Your Feedback
+        </h2>
+        <button type="button" class="work-modal-close-btn" id="close-feedback-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <div style="padding: 20px 24px;">
+        <p style="color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">
+          Thank you for trying out Vorkoo!
+        </p>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.5; margin-bottom: 16px;">
+          Feedback link will be connected before public sharing.
+        </p>
+        <div class="demo-feedback-placeholder-box">
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+            This prototype is designed to collect feedback from friends, freelancers, mentors, and investors. Replace the placeholder URL in <code>home.js</code> with your Google Form, Typeform, or survey link at any time.
+          </p>
+        </div>
+      </div>
+      <div class="work-modal-footer" style="margin-top: 0; padding: 16px 24px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-secondary" id="footer-close-feedback-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Application Script -->
+  <script src="home.js"></script>
+</body>
+</html>

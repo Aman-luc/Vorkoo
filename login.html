@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in to Vorkoo</title>
+  <style>
+    /* 
+      ========================================
+      VORKOO DESIGN TOKENS & RESET
+      ========================================
+    */
+    :root {
+      --bg-dark: #0B0F19;
+      --bg-card: #111827;
+      --border-color: #1F2937;
+      --border-hover: #374151;
+      
+      --accent-cyan: #06B6D4;
+      --accent-cyan-hover: #0891B2;
+      --accent-cyan-transparent: rgba(6, 182, 212, 0.15);
+      
+      --text-main: #F9FAFB;
+      --text-muted: #9CA3AF;
+      
+      --error-color: #EF4444;
+      --error-bg: rgba(239, 68, 68, 0.1);
+      
+      --success-color: #10B981;
+      
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    /* 
+      ========================================
+      LAYOUT & TYPOGRAPHY
+      ========================================
+    */
+    .logo-container {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .logo {
+      color: var(--text-main);
+      font-size: 1.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: -0.025em;
+    }
+    
+    .logo span {
+      color: var(--accent-cyan);
+    }
+
+    .login-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* 
+      ========================================
+      FORM STYLES
+      ========================================
+    */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .forgot-link {
+      font-size: 0.8125rem;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      cursor: pointer;
+      transition: text-decoration 0.2s;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      height: 48px; /* Comfortable touch target */
+    }
+
+    /* Password Specific padding to accommodate toggle icon */
+    .input-wrapper.password input {
+      padding-right: 3rem;
+    }
+
+    input:hover {
+      border-color: var(--border-hover);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px var(--accent-cyan-transparent);
+    }
+
+    input.invalid {
+      border-color: var(--error-color);
+    }
+    
+    input.invalid:focus {
+      box-shadow: 0 0 0 3px var(--error-bg);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: color 0.2s, background-color 0.2s;
+    }
+
+    .password-toggle:hover {
+      color: var(--text-main);
+      background-color: var(--border-color);
+    }
+
+    .password-toggle:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: -2px;
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .error-msg {
+      display: none;
+      color: var(--error-color);
+      font-size: 0.8125rem;
+      margin-top: 0.375rem;
+      line-height: 1.4;
+    }
+
+    .error-msg a {
+      color: var(--accent-cyan);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .error-msg a:hover {
+      color: var(--accent-cyan-hover);
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    /* 
+      ========================================
+      BUTTONS & FOOTER
+      ========================================
+    */
+    .submit-btn {
+      width: 100%;
+      background-color: var(--accent-cyan);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      height: 48px;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent-cyan-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .footer-links {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links a, .footer-links button {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 500;
+      margin-left: 0.25rem;
+      transition: text-decoration 0.2s;
+      background: none;
+      border: none;
+      font-size: inherit;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .footer-links a:hover, .footer-links button:hover {
+      text-decoration: underline;
+    }
+
+    /* 
+      ========================================
+      STATES (MOCK)
+      ========================================
+    */
+    .view-state {
+      display: none;
+    }
+
+    .view-state.active {
+      display: block;
+    }
+
+    .success-state {
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .success-icon {
+      color: var(--accent-cyan);
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1.25rem auto;
+    }
+
+    .success-state h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .success-state p {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .notice {
+      display: inline-block;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+      color: var(--accent-cyan);
+      line-height: 1.5;
+    }
+
+    /* Mobile refinements */
+    @media (max-width: 430px) {
+      .login-card {
+        padding: 2rem 1.25rem;
+        border: none;
+        background-color: transparent;
+        box-shadow: none;
+      }
+      
+      body {
+        padding: 1rem;
+        justify-content: flex-start;
+      }
+      
+      .logo-container {
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="logo-container">
+    <a href="/" class="logo">Vor<span>koo</span></a>
+  </header>
+
+  <main class="login-card">
+    
+    <!-- VIEW: LOGIN FORM -->
+    <div id="view-login" class="view-state active">
+      <div class="card-header">
+        <h1>Welcome back</h1>
+        <p class="subtitle">Continue managing your work with clarity.</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="jane@example.com">
+          </div>
+          <span class="error-msg" id="email-error"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password">Password</label>
+            <button type="button" id="btn-forgot-password" class="forgot-link">Forgot password?</button>
+          </div>
+          <div class="input-wrapper password">
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+            <button type="button" class="password-toggle" aria-label="Show password" aria-controls="password">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon-eye">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </button>
+          </div>
+          <span class="error-msg" id="password-error"></span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">Log In</button>
+      </form>
+
+      <div class="footer-links">
+        Don't have an account? <a href="signup.html">Create one</a>
+      </div>
+      <div class="footer-links" style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid var(--border-color);">
+        Just exploring? <a href="../Vor-home/home.html#dashboard" id="demoLinkLogin">Try the Demo Workspace &rarr;</a>
+      </div>
+    </div>
+
+    <!-- VIEW: RESET PASSWORD FORM -->
+    <div id="view-reset" class="view-state">
+      <div class="card-header">
+        <h1>Reset your password</h1>
+        <p class="subtitle">Enter your email and we'll help you reset your password.</p>
+      </div>
+
+      <form id="reset-form" novalidate>
+        <div class="form-group">
+          <label for="reset-email">Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="reset-email" name="reset-email" required autocomplete="email" placeholder="jane@example.com">
+          </div>
+          <span class="error-msg" id="reset-email-error"></span>
+        </div>
+
+        <button type="submit" class="submit-btn">Send Reset Link</button>
+      </form>
+
+      <div class="footer-links">
+        <button type="button" class="btn-back-login">Back to Login</button>
+      </div>
+    </div>
+
+    <!-- VIEW: LOGIN SUCCESS MOCK -->
+    <div id="view-login-success" class="view-state success-state">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="success-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+      <h2>Login Validated</h2>
+      <p>Your credentials are formatted correctly.</p>
+      <div class="notice">
+        Note: Backend authentication is not yet connected. Real login functionality will be implemented in a later phase.
+      </div>
+      <div class="footer-links">
+        <button type="button" class="btn-back-login">Back to Login</button>
+      </div>
+    </div>
+
+    <!-- VIEW: RESET SUCCESS MOCK -->
+    <div id="view-reset-success" class="view-state success-state">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="success-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+      </svg>
+      <h2>Notice</h2>
+      <div class="notice">
+        Password reset will be available once Vorkoo authentication is connected.
+      </div>
+      <div class="footer-links">
+        <button type="button" class="btn-back-login">Back to Login</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      /* --- View State Management --- */
+      const views = {
+        login: document.getElementById('view-login'),
+        reset: document.getElementById('view-reset'),
+        loginSuccess: document.getElementById('view-login-success'),
+        resetSuccess: document.getElementById('view-reset-success')
+      };
+
+      const showView = (viewName) => {
+        Object.values(views).forEach(view => view.classList.remove('active'));
+        views[viewName].classList.add('active');
+        
+        // Optional: Pre-fill reset email if login email is typed
+        if(viewName === 'reset' && inputs.email.value) {
+          inputs.resetEmail.value = inputs.email.value;
+          // Clear error state if any
+          inputs.resetEmail.classList.remove('invalid');
+          document.getElementById('reset-email-error').classList.remove('visible');
+        }
+      };
+
+      // Navigation Buttons
+      document.getElementById('btn-forgot-password').addEventListener('click', () => showView('reset'));
+      
+      document.querySelectorAll('.btn-back-login').forEach(btn => {
+        btn.addEventListener('click', () => showView('login'));
+      });
+
+      /* --- Form Elements & Validators --- */
+      const loginForm = document.getElementById('login-form');
+      const resetForm = document.getElementById('reset-form');
+      
+      const inputs = {
+        email: document.getElementById('email'),
+        password: document.getElementById('password'),
+        resetEmail: document.getElementById('reset-email')
+      };
+
+      // Pre-fill email if passed in query string (e.g. redirected from signup)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        if (emailParam && inputs.email) {
+          inputs.email.value = emailParam.trim();
+        }
+      } catch (e) {}
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      const validators = {
+        email: (val) => {
+          if (!val.trim()) return "Email is required.";
+          if (!emailRegex.test(val.trim())) return "Please enter a valid email address.";
+          return "";
+        },
+        password: (val) => {
+          if (!val) return "Password is required.";
+          return "";
+        },
+        resetEmail: (val) => {
+          if (!val.trim()) return "Email is required.";
+          if (!emailRegex.test(val.trim())) return "Please enter a valid email address.";
+          return "";
+        }
+      };
+
+      // Generic Validation Handler
+      const validateField = (fieldName) => {
+        const input = inputs[fieldName];
+        // The HTML ID mapping: resetEmail maps to 'reset-email', others map perfectly.
+        const idBase = fieldName === 'resetEmail' ? 'reset-email' : fieldName;
+        const errorEl = document.getElementById(`${idBase}-error`);
+        const errorMsg = validators[fieldName](input.value);
+        
+        if (errorMsg) {
+          input.classList.add('invalid');
+          errorEl.textContent = errorMsg;
+          errorEl.classList.add('visible');
+          return false;
+        } else {
+          input.classList.remove('invalid');
+          errorEl.textContent = "";
+          errorEl.classList.remove('visible');
+          return true;
+        }
+      };
+
+      // Real-time Validation Binding
+      Object.keys(inputs).forEach(key => {
+        inputs[key].addEventListener('blur', () => validateField(key));
+        inputs[key].addEventListener('input', () => {
+          if (inputs[key].classList.contains('invalid')) {
+            validateField(key);
+          }
+        });
+      });
+
+      const USERS_STORAGE_KEY = "vorkoo-users";
+      const SESSION_STORAGE_KEY = "vorkoo-current-user";
+
+      function normalizeEmail(email) {
+        return String(email || "").trim().toLowerCase();
+      }
+
+      function getRegisteredUsers() {
+        try {
+          const data = localStorage.getItem(USERS_STORAGE_KEY);
+          if (data) {
+            const parsed = JSON.parse(data);
+            if (Array.isArray(parsed)) {
+              return parsed.filter(u => u && typeof u === 'object');
+            }
+            if (parsed && typeof parsed === 'object') {
+              if (Array.isArray(parsed.users)) {
+                return parsed.users.filter(u => u && typeof u === 'object');
+              }
+              const converted = [];
+              Object.keys(parsed).forEach(key => {
+                const entry = parsed[key];
+                if (entry && typeof entry === 'object') {
+                  converted.push({
+                    fullName: entry.fullName || entry.name || key,
+                    email: entry.email || key,
+                    password: entry.password || ""
+                  });
+                }
+              });
+              return converted;
+            }
+          }
+        } catch (e) {
+          console.warn("Failed to read users from localStorage", e);
+        }
+        return [];
+      }
+
+      /* --- Form Submissions --- */
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        inputs.email.value = inputs.email.value.trim();
+        const isEmailValid = validateField('email');
+        const isPasswordValid = validateField('password');
+        let isValid = isEmailValid && isPasswordValid;
+
+        if (!isValid) return;
+
+        const emailVal = normalizeEmail(inputs.email.value);
+        const passwordVal = inputs.password.value;
+        const users = getRegisteredUsers();
+
+        const user = users.find(u => u && u.email && normalizeEmail(u.email) === emailVal);
+
+        if (!user) {
+          inputs.email.classList.add('invalid');
+          const emailErrorEl = document.getElementById('email-error');
+
+          // Check if legacy workspace exists for this email
+          const legacyWorkData = localStorage.getItem("vorkoo-work-items_" + emailVal);
+          if (legacyWorkData !== null) {
+            emailErrorEl.innerHTML = 'This email has an existing Vorkoo workspace from an older version. <a href="signup.html?email=' + encodeURIComponent(emailVal) + '">Create an account</a> with this email to recover it.';
+          } else {
+            emailErrorEl.textContent = "No account found with this email.";
+          }
+
+          emailErrorEl.classList.add('visible');
+          inputs.email.focus();
+          return;
+        }
+
+        if (user.password !== passwordVal) {
+          inputs.password.classList.add('invalid');
+          const passErrorEl = document.getElementById('password-error');
+          passErrorEl.textContent = "Incorrect password. Please try again.";
+          passErrorEl.classList.add('visible');
+          inputs.password.focus();
+          return;
+        }
+
+        // Authentication successful: set active session
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
+          fullName: user.fullName || "User",
+          email: user.email
+        }));
+
+        window.location.href = '../Vor-home/home.html#dashboard';
+      });
+
+      resetForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        inputs.resetEmail.value = inputs.resetEmail.value.trim();
+        if (validateField('resetEmail')) {
+          showView('resetSuccess');
+        }
+      });
+
+      /* --- Password Visibility Toggle --- */
+      const toggleBtn = document.querySelector('.password-toggle');
+      const iconEye = `<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />`;
+      const iconEyeSlash = `<path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />`;
+
+      toggleBtn.addEventListener('click', () => {
+        const input = inputs.password;
+        const svg = toggleBtn.querySelector('svg');
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          toggleBtn.setAttribute('aria-label', 'Hide password');
+          svg.innerHTML = iconEyeSlash;
+        } else {
+          input.type = 'password';
+          toggleBtn.setAttribute('aria-label', 'Show password');
+          svg.innerHTML = iconEye;
+        }
+      });
+      const demoLink = document.getElementById('demoLinkLogin');
+      if (demoLink) {
+        demoLink.addEventListener('click', () => {
+          try {
+            localStorage.setItem('vorkoo-current-user', JSON.stringify({
+              fullName: 'Demo User',
+              email: 'demo@vorkoo.app',
+              isDemo: true
+            }));
+          } catch (e) {
+            console.warn('Could not set demo session', e);
+          }
+        });
+      }
+      
+    });
+  </script>
+</body>
+</html>

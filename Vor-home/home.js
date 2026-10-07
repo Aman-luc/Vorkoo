@@ -3361,6 +3361,19 @@
     initInvoiceModal();
     initRouter();
     renderAllViews();
+
+    // Service Worker Registration for PWA support (handles GitHub Pages subpaths)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('../sw.js', { scope: '../' })
+          .then((reg) => {
+            // SW registered successfully with repository subpath scope
+          })
+          .catch((err) => {
+            console.warn('ServiceWorker registration error:', err);
+          });
+      });
+    }
   }
 
   if (document.readyState === "loading") {
